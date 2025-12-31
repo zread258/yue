@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { Heart, Sparkles, Loader2, Moon, Stars } from 'lucide-react';
+import { Heart, Sparkles, Loader2, Stars, Navigation } from 'lucide-react';
 import FireworkCanvas from './components/FireworkCanvas.tsx';
 import { generateNewYearWish } from './services/geminiService.ts';
 import { AppState } from './types.ts';
@@ -11,21 +11,38 @@ const App: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [timeLeft, setTimeLeft] = useState({ d: 0, h: 0, m: 0, s: 0 });
 
-  const StarsBackground = useMemo(() => (
+  const CosmicBackground = useMemo(() => (
     <div className="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
       <div className="nebula nebula-1"></div>
       <div className="nebula nebula-2"></div>
-      {[...Array(120)].map((_, i) => (
+      
+      {/* Background Stars */}
+      {[...Array(150)].map((_, i) => (
         <div 
-          key={i} 
-          className="star" 
+          key={`star-${i}`} 
+          className="absolute bg-white rounded-full opacity-30 animate-pulse" 
           style={{
             top: `${Math.random() * 100}%`,
             left: `${Math.random() * 100}%`,
-            width: `${Math.random() * 2 + 0.5}px`,
-            height: `${Math.random() * 2 + 0.5}px`,
-            '--duration': `${Math.random() * 4 + 2}s`
-          } as any}
+            width: `${Math.random() * 2}px`,
+            height: `${Math.random() * 2}px`,
+            animationDelay: `${Math.random() * 5}s`,
+            animationDuration: `${Math.random() * 3 + 2}s`
+          }}
+        />
+      ))}
+
+      {/* Shooting Stars */}
+      {[...Array(6)].map((_, i) => (
+        <div 
+          key={`shooting-${i}`}
+          className="shooting-star"
+          style={{
+            top: `${Math.random() * 50}%`,
+            left: `${Math.random() * 100 + 50}%`,
+            animation: `shoot ${Math.random() * 3 + 5}s linear infinite`,
+            animationDelay: `${Math.random() * 15}s`
+          }}
         />
       ))}
     </div>
@@ -33,25 +50,18 @@ const App: React.FC = () => {
 
   const calculateTimeLeft = useCallback(() => {
     const now = new Date();
-    // 目标时间设定为 2026年1月1日
     const target = new Date(2026, 0, 1, 0, 0, 0); 
     const difference = target.getTime() - now.getTime();
-    
-    if (difference > 0) {
-      return {
-        d: Math.floor(difference / (1000 * 60 * 60 * 24)),
-        h: Math.floor((difference / (1000 * 60 * 60)) % 24),
-        m: Math.floor((difference / 1000 / 60) % 60),
-        s: Math.floor((difference / 1000) % 60),
-      };
-    }
-    return { d: 0, h: 0, m: 0, s: 0 };
+    return difference > 0 ? {
+      d: Math.floor(difference / (1000 * 60 * 60 * 24)),
+      h: Math.floor((difference / (1000 * 60 * 60)) % 24),
+      m: Math.floor((difference / 1000 / 60) % 60),
+      s: Math.floor((difference / 1000) % 60),
+    } : { d: 0, h: 0, m: 0, s: 0 };
   }, []);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft(calculateTimeLeft());
-    }, 1000);
+    const timer = setInterval(() => setTimeLeft(calculateTimeLeft()), 1000);
     return () => clearInterval(timer);
   }, [calculateTimeLeft]);
 
@@ -64,47 +74,51 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden selection:bg-pink-500/30">
-      {StarsBackground}
+    <div className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden">
+      {CosmicBackground}
       
       {state === AppState.CELEBRATION && <FireworkCanvas />}
 
-      <div className="z-10 text-center px-6 max-w-lg">
+      <div className="z-10 text-center px-8 w-full max-w-4xl">
         {state === AppState.INTRO && (
-          <div className="animate-in fade-in slide-in-from-bottom-10 duration-1000">
-            <h1 className="text-7xl md:text-9xl font-romantic glow-text mb-2 text-pink-50">
-              For Yue
+          <div className="animate-in fade-in zoom-in-90 duration-1000">
+            <h1 className="text-8xl md:text-[12rem] font-romantic glow-title mb-6 text-white leading-none">
+              Yue
             </h1>
-            <p className="text-[10px] md:text-xs font-elegant tracking-[0.6em] text-pink-200/40 uppercase mb-16">
-              A 2026 Starlit Beginning
+            <p className="text-xs md:text-sm font-elegant tracking-[1em] text-indigo-200/50 uppercase mb-20">
+              The Horizon of Eternity 2026
             </p>
             <button 
               onClick={() => setState(AppState.COUNTDOWN)}
-              className="group relative px-12 py-3 rounded-full glass hover:bg-white/5 transition-all duration-700 overflow-hidden"
+              className="group relative px-16 py-4 glass-morphism rounded-full hover:bg-white/10 transition-all duration-700"
             >
-              <span className="relative z-10 flex items-center gap-4 text-[10px] tracking-[0.3em] text-pink-100 font-elegant">
-                OPEN THE NIGHT <Heart className="w-3 h-3 text-pink-400 group-hover:scale-125 transition-transform" />
+              <span className="relative z-10 flex items-center gap-6 text-[10px] tracking-[0.5em] text-white font-elegant uppercase">
+                Voyage into the night <Navigation className="w-3 h-3 group-hover:translate-x-2 transition-transform" />
               </span>
             </button>
           </div>
         )}
 
         {state === AppState.COUNTDOWN && (
-          <div className="animate-in fade-in zoom-in-95 duration-1000 space-y-16">
-            <div className="space-y-4">
-               <p className="text-[9px] font-elegant tracking-[0.4em] text-pink-200/40 uppercase">Counting down to our 2026</p>
-               <div className="flex gap-8 md:gap-14 justify-center items-center">
+          <div className="animate-in fade-in slide-in-from-top-12 duration-1000 space-y-24">
+            <div className="space-y-8">
+               <p className="text-[10px] font-elegant tracking-[0.6em] text-white/30 uppercase flex items-center justify-center gap-4">
+                 <div className="h-[1px] w-12 bg-white/10"></div>
+                 Approaching 2026
+                 <div className="h-[1px] w-12 bg-white/10"></div>
+               </p>
+               <div className="flex gap-10 md:gap-20 justify-center items-center">
                 {[
                   { label: 'days', value: timeLeft.d },
                   { label: 'hours', value: timeLeft.h },
                   { label: 'mins', value: timeLeft.m },
                   { label: 'secs', value: timeLeft.s }
                 ].map((item, i) => (
-                  <div key={i} className="flex flex-col items-center">
-                    <span className="text-4xl md:text-6xl font-light font-elegant text-pink-50/80 tabular-nums">
+                  <div key={i} className="flex flex-col items-center group">
+                    <span className="text-5xl md:text-8xl font-thin font-elegant text-white/90 tabular-nums">
                       {item.value.toString().padStart(2, '0')}
                     </span>
-                    <span className="text-[9px] uppercase tracking-widest text-pink-300/30 mt-2">{item.label}</span>
+                    <span className="text-[10px] uppercase tracking-[0.3em] text-white/20 mt-4">{item.label}</span>
                   </div>
                 ))}
               </div>
@@ -113,49 +127,49 @@ const App: React.FC = () => {
             <button 
               onClick={handleCelebrate}
               disabled={loading}
-              className="group relative px-14 py-4 bg-white/90 text-black rounded-full font-elegant text-[10px] tracking-[0.3em] transition-all hover:bg-white hover:tracking-[0.4em] disabled:opacity-50"
+              className="group relative px-20 py-5 bg-white text-black rounded-full font-elegant text-[11px] tracking-[0.5em] transition-all hover:scale-105 active:scale-95 disabled:opacity-50 shadow-[0_0_50px_rgba(255,255,255,0.3)]"
             >
               {loading ? (
-                <Loader2 className="w-4 h-4 animate-spin mx-auto" />
+                <Loader2 className="w-5 h-5 animate-spin mx-auto" />
               ) : (
-                "WELCOME 2026"
+                "EMBRACE THE INFINITE"
               )}
             </button>
           </div>
         )}
 
         {state === AppState.CELEBRATION && (
-          <div className="animate-in zoom-in-95 fade-in duration-1000 space-y-12">
-            <div className="glass p-12 md:p-16 rounded-[3rem] relative border-white/5">
-              <Sparkles className="absolute top-8 right-8 w-4 h-4 text-pink-400/20" />
+          <div className="animate-in scale-95 fade-in duration-1000 space-y-16 w-full max-w-2xl mx-auto">
+            <div className="glass-morphism p-16 md:p-24 rounded-[4rem] relative">
+              <Sparkles className="absolute top-12 right-12 w-5 h-5 text-indigo-400/30" />
               
-              <h2 className="text-4xl md:text-6xl font-romantic mb-10 text-pink-50 glow-text">
+              <h2 className="text-5xl md:text-7xl font-romantic mb-12 text-white glow-title">
                 Happy 2026
               </h2>
               
-              <div className="text-base md:text-lg leading-relaxed text-pink-100/80 font-light italic max-w-xs mx-auto">
-                "{wish}"
+              <div className="text-lg md:text-2xl leading-relaxed text-white/90 font-light italic whitespace-pre-line tracking-wide font-romantic">
+                {wish}
               </div>
 
-              <div className="mt-12 opacity-30 flex justify-center items-center gap-4">
-                <div className="h-[1px] w-8 bg-pink-200"></div>
-                <Stars className="w-3 h-3" />
-                <div className="h-[1px] w-8 bg-pink-200"></div>
+              <div className="mt-16 flex justify-center items-center gap-6 text-white/20">
+                <div className="h-[1px] w-20 bg-gradient-to-r from-transparent to-white/20"></div>
+                <Stars className="w-4 h-4" />
+                <div className="h-[1px] w-20 bg-gradient-to-l from-transparent to-white/20"></div>
               </div>
             </div>
 
             <button 
               onClick={() => setState(AppState.INTRO)}
-              className="text-white/10 hover:text-white/30 text-[8px] tracking-[0.5em] transition-colors uppercase"
+              className="text-white/20 hover:text-white/50 text-[10px] tracking-[0.8em] transition-all uppercase font-elegant"
             >
-              Relive the magic
+              Relive the Magic
             </button>
           </div>
         )}
       </div>
 
-      <footer className="absolute bottom-10 text-[8px] tracking-[0.8em] text-white/5 uppercase font-elegant pointer-events-none">
-        Yue • Forever • 2026
+      <footer className="absolute bottom-12 text-[10px] tracking-[1.2em] text-white/5 uppercase font-elegant pointer-events-none select-none">
+        Yue • Infinite • 2026
       </footer>
     </div>
   );

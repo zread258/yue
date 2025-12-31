@@ -7,14 +7,14 @@ const FireworkCanvas: React.FC = () => {
   const particlesRef = useRef<Particle[]>([]);
 
   const createFirework = (x: number, y: number) => {
-    // Romantic Palette: Rose Gold, Champagne, Silver, Violet, White
-    const colors = ['#F19CBB', '#FFD700', '#E5E4E2', '#8A2BE2', '#FFFFFF', '#FFB7C5'];
+    // Cinematic Galaxy Palette: Indigo, Deep Pink, Starlight Blue, Golden Dust, Pure White
+    const colors = ['#6366f1', '#ec4899', '#bae6fd', '#facc15', '#ffffff', '#c084fc'];
     const color = colors[Math.floor(Math.random() * colors.length)];
-    const count = 120 + Math.random() * 60;
+    const count = 150 + Math.random() * 100;
     
     for (let i = 0; i < count; i++) {
       const angle = Math.random() * Math.PI * 2;
-      const speed = Math.random() * 5 + 1;
+      const speed = Math.random() * 7 + 0.5;
       particlesRef.current.push({
         x,
         y,
@@ -22,7 +22,7 @@ const FireworkCanvas: React.FC = () => {
         vy: Math.sin(angle) * speed,
         alpha: 1,
         color,
-        size: Math.random() * 1.5 + 0.5
+        size: Math.random() * 2 + 0.2
       });
     }
   };
@@ -45,14 +45,16 @@ const FireworkCanvas: React.FC = () => {
     let animationId: number;
 
     const animate = () => {
-      ctx.fillStyle = 'rgba(2, 2, 5, 0.2)';
+      ctx.fillStyle = 'rgba(1, 1, 5, 0.15)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       particlesRef.current.forEach((p, index) => {
         p.x += p.vx;
         p.y += p.vy;
-        p.vy += 0.04; // Softer gravity
-        p.alpha -= 0.008;
+        
+        p.vx *= 0.99;
+        p.vy += 0.03;
+        p.alpha -= 0.005;
 
         if (p.alpha <= 0) {
           particlesRef.current.splice(index, 1);
@@ -60,13 +62,16 @@ const FireworkCanvas: React.FC = () => {
           ctx.globalAlpha = p.alpha;
           ctx.fillStyle = p.color;
           ctx.beginPath();
+          ctx.shadowBlur = 10;
+          ctx.shadowColor = p.color;
           ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
           ctx.fill();
+          ctx.shadowBlur = 0;
         }
       });
 
       if (Math.random() < 0.04) {
-        createFirework(Math.random() * canvas.width, Math.random() * (canvas.height * 0.6));
+        createFirework(Math.random() * canvas.width, Math.random() * (canvas.height * 0.5));
       }
 
       animationId = requestAnimationFrame(animate);
@@ -74,10 +79,7 @@ const FireworkCanvas: React.FC = () => {
 
     animate();
 
-    const handleClick = (e: MouseEvent) => {
-      createFirework(e.clientX, e.clientY);
-    };
-
+    const handleClick = (e: MouseEvent) => createFirework(e.clientX, e.clientY);
     canvas.addEventListener('click', handleClick);
 
     return () => {
