@@ -79,7 +79,7 @@ const App: React.FC = () => {
       
       {state === AppState.CELEBRATION && <FireworkCanvas />}
 
-      <div className="z-10 text-center px-8 w-full max-w-4xl">
+      <div className="z-10 text-center px-8 w-full max-w-5xl">
         {state === AppState.INTRO && (
           <div className="animate-in fade-in zoom-in-90 duration-1000">
             <h1 className="text-8xl md:text-[12rem] font-romantic glow-title mb-6 text-white leading-none">
@@ -139,15 +139,15 @@ const App: React.FC = () => {
         )}
 
         {state === AppState.CELEBRATION && (
-          <div className="animate-in scale-95 fade-in duration-1000 space-y-16 w-full max-w-2xl mx-auto">
-            <div className="glass-morphism p-16 md:p-24 rounded-[4rem] relative">
-              <Sparkles className="absolute top-12 right-12 w-5 h-5 text-indigo-400/30" />
+          <div className="animate-in scale-95 fade-in duration-1000 space-y-16 w-full max-w-4xl mx-auto">
+            <div className="glass-morphism p-12 md:p-20 rounded-[3rem] relative border-white/10">
+              <Sparkles className="absolute top-10 right-10 w-5 h-5 text-indigo-400/30" />
               
               <h2 className="text-5xl md:text-7xl font-romantic mb-12 text-white glow-title">
                 Happy 2026
               </h2>
               
-              <div className="text-lg md:text-2xl leading-relaxed text-white/90 font-light italic whitespace-pre-line tracking-wide font-romantic">
+              <div className="text-lg md:text-2xl leading-relaxed text-white/95 font-light italic whitespace-pre-line tracking-wide font-romantic">
                 {wish}
               </div>
 
