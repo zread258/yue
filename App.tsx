@@ -33,7 +33,7 @@ const App: React.FC = () => {
 
   const calculateTimeLeft = useCallback(() => {
     const now = new Date();
-    // Setting target to January 1st, 2026
+    // 目标时间设定为 2026年1月1日
     const target = new Date(2026, 0, 1, 0, 0, 0); 
     const difference = target.getTime() - now.getTime();
     
@@ -57,6 +57,7 @@ const App: React.FC = () => {
 
   const handleCelebrate = async () => {
     setLoading(true);
+    // 这里会使用 process.env.API_KEY，如果没有设置，geminiService 会捕获错误并返回默认祝福
     const generatedWish = await generateYaranWish("Yaran");
     setWish(generatedWish);
     setLoading(false);
@@ -92,7 +93,7 @@ const App: React.FC = () => {
         {state === AppState.COUNTDOWN && (
           <div className="animate-in fade-in zoom-in-95 duration-1000 space-y-16">
             <div className="space-y-4">
-               <p className="text-[9px] font-elegant tracking-[0.4em] text-pink-200/40 uppercase">Counting down to our year</p>
+               <p className="text-[9px] font-elegant tracking-[0.4em] text-pink-200/40 uppercase">Counting down to our 2026</p>
                <div className="flex gap-8 md:gap-14 justify-center items-center">
                 {[
                   { label: 'days', value: timeLeft.d },
