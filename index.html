@@ -6,15 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>For Yaran: A 2026 Midnight Serenade</title>
     <script>
-      // 预定义的全局变量，防止某些库在尝试访问 process 时报错
+      // 核心修复：确保全局环境安全
       window.process = { env: { API_KEY: "" } };
       
-      // 错误捕获：如果 JS 加载失败，至少在屏幕上给点提示，而不是一直显示黑屏
-      window.onerror = function(msg, url, line) {
+      // 增强型错误捕获
+      window.onerror = function(msg, url, line, col, error) {
+        console.error("Global Error:", msg, "at", url, ":", line);
         const root = document.getElementById('root');
         if (root && root.innerHTML === "") {
-          root.innerHTML = `<div style="padding: 20px; font-family: sans-serif; font-size: 12px; color: #f87171;">
-            Load Error: ${msg}<br/>Source: ${url}:${line}
+          root.innerHTML = `<div style="padding: 30px; font-family: sans-serif; font-size: 14px; color: #fda4af; text-align: center; background: #020208; height: 100vh; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+            <p style="margin-bottom: 10px;">✨ 这里的星光正在穿梭中...</p>
+            <code style="font-size: 10px; opacity: 0.5;">${msg}</code>
           </div>`;
         }
         return false;
@@ -83,6 +85,7 @@
             text-shadow: 0 0 20px rgba(255, 182, 193, 0.3);
         }
         
+        /* 状态指示：当 React 还没挂载时显示 */
         #root:empty::before {
             content: 'Loading Moonlight...';
             position: absolute;
@@ -111,6 +114,7 @@
 </head>
 <body>
     <div id="root"></div>
-    <script type="module" src="index.tsx"></script>
+    <!-- 确保路径指向根目录 -->
+    <script type="module" src="./index.tsx"></script>
 </body>
 </html>
