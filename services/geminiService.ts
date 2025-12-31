@@ -8,12 +8,10 @@ export const generateYaranWish = async (targetName: string = "Yaran"): Promise<s
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
       contents: `
-        Write a short, poetic, and deeply romantic New Year's wish for a girl named "${targetName}".
-        Context: We are in a beautiful "ambiguous" stage where feelings are growing but not yet fully defined.
-        Tone: Gentle, ethereal, slightly mysterious, and hopeful.
-        Length: 2-3 sentences max.
-        Focus: The beauty of meeting her and the quiet excitement for the year ahead together.
-        Language: English.
+        Generate a one-sentence, deeply poetic New Year's wish for "${targetName}" for the year 2026.
+        Vibe: Soft, romantic, and elegant. 
+        Focus: The magic of the new year and starting a fresh chapter together.
+        Maximum 20 words.
       `,
       config: {
         temperature: 0.9,
@@ -21,9 +19,9 @@ export const generateYaranWish = async (targetName: string = "Yaran"): Promise<s
       }
     });
 
-    return response.text || "As the stars align for 2025, my only wish is to keep chasing this beautiful mystery with you. Happy New Year, Yaran.";
+    return response.text?.trim() || "May every star in 2026 lead me closer to the magic of you.";
   } catch (error) {
-    console.error("Gemini API Error:", error);
-    return "Across the threshold of time, I only want to find myself walking beside you. Happy 2025, Yaran.";
+    console.error("Gemini Error:", error);
+    return "Let the year 2026 be as beautiful as the first moment our paths crossed.";
   }
 };
