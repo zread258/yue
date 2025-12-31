@@ -5,9 +5,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>For Yaran: A 2026 Midnight Serenade</title>
-    <!-- 基础保护：防止 process 未定义导致的黑屏 -->
     <script>
+      // 预定义的全局变量，防止某些库在尝试访问 process 时报错
       window.process = { env: { API_KEY: "" } };
+      
+      // 错误捕获：如果 JS 加载失败，至少在屏幕上给点提示，而不是一直显示黑屏
+      window.onerror = function(msg, url, line) {
+        const root = document.getElementById('root');
+        if (root && root.innerHTML === "") {
+          root.innerHTML = `<div style="padding: 20px; font-family: sans-serif; font-size: 12px; color: #f87171;">
+            Load Error: ${msg}<br/>Source: ${url}:${line}
+          </div>`;
+        }
+        return false;
+      };
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cinzel:wght@400;700&family=Inter:wght@300;400&display=swap" rel="stylesheet">
@@ -72,7 +83,6 @@
             text-shadow: 0 0 20px rgba(255, 182, 193, 0.3);
         }
         
-        /* 初始加载状态 */
         #root:empty::before {
             content: 'Loading Moonlight...';
             position: absolute;
@@ -101,6 +111,6 @@
 </head>
 <body>
     <div id="root"></div>
-    <script type="module" src="./index.tsx"></script>
+    <script type="module" src="index.tsx"></script>
 </body>
 </html>

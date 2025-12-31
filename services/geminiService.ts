@@ -2,9 +2,15 @@
 import { GoogleGenAI } from "@google/genai";
 
 export const generateYaranWish = async (targetName: string = "Yaran"): Promise<string> => {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const apiKey = process.env.API_KEY;
   
+  if (!apiKey || apiKey === "") {
+    console.warn("API_KEY is not set, using default wish.");
+    return "May the year 2026 be as beautiful as the first moment our paths crossed.";
+  }
+
   try {
+    const ai = new GoogleGenAI({ apiKey });
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
       contents: `
