@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Heart, Sparkles, Loader2, Moon, Stars } from 'lucide-react';
 import FireworkCanvas from './components/FireworkCanvas.tsx';
-import { generateYaranWish } from './services/geminiService.ts';
+import { generateNewYearWish } from './services/geminiService.ts';
 import { AppState } from './types.ts';
 
 const App: React.FC = () => {
@@ -57,8 +57,7 @@ const App: React.FC = () => {
 
   const handleCelebrate = async () => {
     setLoading(true);
-    // 这里会使用 process.env.API_KEY，如果没有设置，geminiService 会捕获错误并返回默认祝福
-    const generatedWish = await generateYaranWish("Yaran");
+    const generatedWish = await generateNewYearWish("Yue");
     setWish(generatedWish);
     setLoading(false);
     setState(AppState.CELEBRATION);
@@ -74,7 +73,7 @@ const App: React.FC = () => {
         {state === AppState.INTRO && (
           <div className="animate-in fade-in slide-in-from-bottom-10 duration-1000">
             <h1 className="text-7xl md:text-9xl font-romantic glow-text mb-2 text-pink-50">
-              For Yaran
+              For Yue
             </h1>
             <p className="text-[10px] md:text-xs font-elegant tracking-[0.6em] text-pink-200/40 uppercase mb-16">
               A 2026 Starlit Beginning
@@ -156,7 +155,7 @@ const App: React.FC = () => {
       </div>
 
       <footer className="absolute bottom-10 text-[8px] tracking-[0.8em] text-white/5 uppercase font-elegant pointer-events-none">
-        Yaran • Forever • 2026
+        Yue • Forever • 2026
       </footer>
     </div>
   );

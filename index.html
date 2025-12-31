@@ -4,19 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>For Yaran: A 2026 Midnight Serenade</title>
+    <title>For Yue: A 2026 Midnight Serenade</title>
     <script>
-      // 核心修复：确保全局环境安全
+      // 核心修复：确保全局环境安全，防止 process 未定义报错
       window.process = { env: { API_KEY: "" } };
       
-      // 增强型错误捕获
+      // 全局错误日志捕获：如果加载失败，会在控制台给出清晰提示
       window.onerror = function(msg, url, line, col, error) {
-        console.error("Global Error:", msg, "at", url, ":", line);
+        console.error("Critical Load Error:", msg, "at", url, ":", line);
         const root = document.getElementById('root');
         if (root && root.innerHTML === "") {
-          root.innerHTML = `<div style="padding: 30px; font-family: sans-serif; font-size: 14px; color: #fda4af; text-align: center; background: #020208; height: 100vh; display: flex; align-items: center; justify-content: center; flex-direction: column;">
-            <p style="margin-bottom: 10px;">✨ 这里的星光正在穿梭中...</p>
-            <code style="font-size: 10px; opacity: 0.5;">${msg}</code>
+          root.innerHTML = `<div style="padding: 30px; font-family: serif; font-size: 14px; color: #fda4af; text-align: center; background: #020208; height: 100vh; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+            <p style="margin-bottom: 10px; letter-spacing: 2px;">✨ 星光正在穿梭中，请稍等...</p>
+            <p style="font-size: 10px; opacity: 0.3;">如果长时间无响应，请尝试使用 Chrome 浏览器查看</p>
           </div>`;
         }
         return false;
@@ -85,7 +85,6 @@
             text-shadow: 0 0 20px rgba(255, 182, 193, 0.3);
         }
         
-        /* 状态指示：当 React 还没挂载时显示 */
         #root:empty::before {
             content: 'Loading Moonlight...';
             position: absolute;
@@ -114,7 +113,6 @@
 </head>
 <body>
     <div id="root"></div>
-    <!-- 确保路径指向根目录 -->
     <script type="module" src="./index.tsx"></script>
 </body>
 </html>

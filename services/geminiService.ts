@@ -1,7 +1,7 @@
 
 import { GoogleGenAI } from "@google/genai";
 
-export const generateYaranWish = async (targetName: string = "Yaran"): Promise<string> => {
+export const generateNewYearWish = async (targetName: string = "Yue"): Promise<string> => {
   const apiKey = process.env.API_KEY;
   
   if (!apiKey || apiKey === "") {
